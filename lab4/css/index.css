@@ -1,0 +1,578 @@
+@import url("reset.css");
+@import url("comments.css");
+
+/* ТЕКСТ */
+
+body {
+    background-color: teal;
+    font-size: 16px;
+    font-family: "Anonymous Pro", serif;
+}
+
+h1 {
+    font-family: "Anonymous Pro", serif;
+    font-weight: 800;
+    font-size: 24px;
+    font-style: normal;
+    text-align: center;
+    margin: 2px;
+}
+
+h3 {
+    font-family: "Anonymous Pro", serif;
+    color: red;
+    font-weight: 800;
+    font-size: 20px;
+    text-align: center;
+    padding: 2px;
+    background-color: white;
+}
+
+/* ШАПКА */
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.logo {
+    display: flex;
+    height: 100px;
+    width: auto;
+    justify-content: flex-start;
+}
+
+nav {
+    display: flex;
+    height: 100px;
+    flex: 1;
+    align-items: flex-end;
+    background-image: url("../img/header-bg.png");
+    background-size: contain;
+    background-repeat: repeat-x;
+    flex-direction: row;
+}
+
+.menu {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.menu-button {
+    font-family: "Anonymous Pro", serif;
+    display: flex;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    font-style: normal;
+    text-decoration: underline;
+    padding: 0.75em;
+    margin: 0.5em;
+    background-color: white;
+    cursor: pointer;
+}
+
+.lights {
+    display: flex;
+    width: 4vw;
+    cursor: pointer;
+}
+
+/* ВСЯ РЕКЛАМА */
+
+.banner {
+    height: 50px;
+    background-color: yellow;
+    display: flex;
+    direction: row;
+    justify-content: space-around;
+
+}
+
+.banner-img {
+    width: 25vw;
+    display: flex;
+    flex-grow: 1;
+}
+
+.vertical-banner{
+    width: 10vw;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.vert-banner-img {
+    width: 10vw;
+    display: flex;
+    flex-grow: 1;
+    height: auto;
+}
+
+
+footer {
+    height: 50px;
+    display: flex;
+    background-color: blue;
+}
+
+/* ОСНОВНАЯ ЧАСТЬ */
+
+main {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+}
+
+.content {
+    width: 80vw;
+    color: black;
+    flex-grow: 6;
+    background-color: yellow;
+    display: grid;
+    grid-template: repeat(4, 1fr) / repeat(8, 1fr);
+    border: solid 5px;
+    border-color: red;
+}
+
+.product-content {
+    grid-area: 1/1/6/6;
+    flex-direction: column;
+    border-right: solid 5px;
+    border-color: red;
+}
+
+.card {
+    padding: 2px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.product-img {
+    display: flex;
+    width: 50%;
+    padding: 4px 2px 4px 2px;
+    background-image: url("../img/frame_gold_Tim.gif");
+    background-size: 100% 100%;
+}
+
+.descr {
+    display: flex;
+    height: 100%;
+    width: 50%;
+    padding: 5px;
+    margin: 5px;
+    font-size: 20px;
+    flex-direction: column;
+}
+
+ol {
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+li {
+    padding: 10px;
+}
+
+.cool {
+    background-color: red;
+    color: white;
+    padding: 0.05em;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.contacts {
+    text-align: center;
+    font-family: "Anonymous Pro", serif;
+    background-color: white;
+    padding: 2px;
+}
+
+/* Lapyop L */
+
+@media (max-width:1025px){
+    body {
+        font-size: 16px;
+    }
+
+    .descr {
+        font-size: 18px;
+    }
+
+    .content {
+        width: 80vw;
+    }
+
+    .vertical-banner {
+        width: 10vw;
+    }
+
+    .vert-banner-img {
+        width: 10vw;
+    }
+}
+
+/* Tablet */
+
+@media (max-width:769px){
+    body {
+        font-size: 12px;
+    }
+
+    .content {
+        height: 100%;
+        grid-template: repeat(6, 1fr) / repeat(10, 1fr);
+    }
+
+    .product-content {
+        grid-area: 1/1/8/8;
+    }
+
+    .comments-content {
+        grid-area: 1/8/6/11;
+    }
+
+    .also-try {
+        grid-area: 6/8/7/11;
+    }
+
+    h1 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+
+    .logo {
+        height: 100px;
+    }
+
+    nav {
+        height: 100px;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-content: flex-end;
+    }
+
+    .descr {
+        margin: 2px;
+        padding: 2px;
+        font-size: 14px;
+    }
+
+    .menu-button {
+        font-size: 14px;
+        padding: 0.5em;
+        margin-bottom: 0px;
+    }
+
+    .banner {
+        height: 50px;
+    }
+
+    li {
+        margin: 5px;
+        padding: 5px;
+    }
+
+    ol {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .comment {
+        margin: 4px;
+    }
+
+}
+
+/* Smartphone L */
+
+@media (max-width:426px){
+    body {
+        font-size: 10px;
+    }
+
+    main {
+        height: 800px;
+    }
+
+    .content {
+        height: 100%;
+        width: 100%;
+        grid-template: repeat(6, 1fr) / repeat(10, 1fr);
+    }
+
+    .product-content {
+        grid-area: 1/1/8/8;
+    }
+
+    .comments-content {
+        grid-area: 1/8/6/11;
+    }
+
+    .also-try {
+        grid-area: 6/8/7/11;
+    }
+
+    h1 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+
+    .logo {
+        height: 100px;
+    }
+
+    nav {
+        height: 100px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: flex-end;
+    }
+
+    .menu-button {
+        font-size: 12px;
+        padding: 0.5em;
+        margin-bottom: 0px;
+    }
+
+    .banner {
+        height: 50px;
+    }
+
+    .vertical-banner {
+        display: none;
+    }
+
+    .vert-banner-img {
+        display: none;
+    }
+
+    .card {
+        flex-direction: column-reverse;
+    }
+
+    .product-img {
+        width: 100%;
+    }
+
+    .descr {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    li {
+        margin: 2px;
+        padding: 2px;
+    }
+
+    ol {
+        margin: 0px;
+        padding: 0px;
+        text-align: left;
+    }
+
+    .comment {
+        margin: 2px;
+        box-shadow: none;
+    }
+
+}
+
+/* Smartphone M */
+
+@media (max-width:376px){
+    body {
+        font-size: 11px;
+    }
+
+    .content {
+        height: 100%;
+        width: 100%;
+        grid-template: repeat(6, 1fr) / repeat(10, 1fr);
+    }
+
+    .product-content {
+        grid-area: 1/1/8/8;
+    }
+
+    .comments-content {
+        grid-area: 1/8/6/11;
+    }
+
+    .also-try {
+        grid-area: 6/8/7/11;
+    }
+
+    h1 {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 12px;
+    }
+
+    .logo {
+        height: 100px;
+    }
+
+    nav {
+        height: 100px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: flex-end;
+    }
+
+    .menu-button {
+        font-size: 12px;
+        padding: 0.5em;
+        margin-bottom: 0px;
+    }
+
+    .banner {
+        height: 50px;
+    }
+
+    .vertical-banner {
+        display: none;
+    }
+
+    .vert-banner-img {
+        display: none;
+    }
+
+    .card {
+        flex-direction: column-reverse;
+    }
+
+    .product-img {
+        width: 100%;
+    }
+
+    .descr {
+        margin: 2px;
+        padding: 2px;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    li {
+        margin: 2px;
+        padding: 5px;
+    }
+
+    ol {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .comment {
+        margin: 4px;
+    }
+
+}
+
+/* Smartphone S */
+
+@media (max-width:320px){
+    body {
+        font-size: 10px;
+    }
+
+    .content {
+        height: 100%;
+        grid-template: repeat(6, 1fr) / repeat(10, 1fr);
+    }
+
+    .product-content {
+        grid-area: 1/1/8/8;
+    }
+
+    .comments-content {
+        grid-area: 1/8/6/11;
+    }
+
+    .also-try {
+        grid-area: 6/8/7/11;
+    }
+
+    h1 {
+        font-size: 12px;
+    }
+
+    h3 {
+        font-size: 10px;
+    }
+
+    .logo {
+        height: 75px;
+    }
+
+    nav {
+        height: 75px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: flex-end;
+    }
+
+    .menu-button {
+        font-size: 12px;
+        padding: 0.25em;
+        margin-bottom: 0px;
+    }
+
+    .banner {
+        height: 30px;
+    }
+
+    .vertical-banner {
+        display: none;
+    }
+
+    .vert-banner-img {
+        display: none;
+    }
+
+    .card {
+        flex-direction: column-reverse;
+    }
+
+    .product-img {
+        width: 100%;
+    }
+
+    .descr {
+        margin: 0px;
+        padding: 2px;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    li {
+        margin: 5px;
+        padding: 5px;
+    }
+
+    ol {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .comment {
+        margin: 2px;
+        box-shadow: none;
+    }
+
+}

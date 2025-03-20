@@ -1,0 +1,119 @@
+/* ОТЗЫВЫ */
+
+.comments-content {
+    grid-area: 1/6/5/9;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.comment {
+    font-family: "Anonymous Pro", serif;
+    margin: 10px;
+    padding: 5px;
+    flex-direction: column;
+    background-color: silver;
+    box-shadow: 3px -1px gray;
+}
+
+.comment-header {
+    background-color: None;
+    display: flex;
+    align-items: flex-end;
+}
+
+.username {
+    display: flex;
+    font-size: 20px;
+    padding: 5px;
+    font-weight: bolder;
+    color: black;
+}
+
+.comment-date {
+    display: flex;
+    font-size: 14px;
+    padding: 5px;
+    font-weight: bold;
+    color: black;
+}
+
+.comment-text {
+    background-color: white;
+    word-wrap: break-word;
+    color: black;
+    font-size: 14;
+    padding: 0.5em;
+}
+
+.rating {
+    display: flex;
+    justify-self:right;
+    font-weight: bolder;
+    font-size: 20px;
+    background-color: red;
+    color: white;
+    padding: 0.25em;
+}
+
+.stars {
+    color: gold;
+    font-size: 20px;
+}
+
+/* ФОРМА ОТЗЫВОВ*/
+
+.comment-form {
+    grid-area: 5/6/6/9;
+    display: flex;
+    flex-direction: column;
+    border-top: solid 5px;
+    border-color: red; 
+}
+
+.form-item {
+    background-color: red;
+    display: flex;
+    align-items: flex-end;
+    font-size: 20px;
+    margin: 5px;
+}
+
+.input-main {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    overflow-y: hidden;
+}
+
+.input-rating {
+    display: flex;
+    direction: rtl;
+    background-color: red;
+}
+.input-rating input[type="radio"] {
+    display: none;
+}
+.input-rating label::before {
+    font-size: 24px;
+    color: gold;
+    content: "☆"; 
+    cursor: pointer;
+}
+
+.input-rating input[type="radio"]:checked ~ label::before {
+    content: "★"; 
+}
+
+.form-button {
+    font-family: "Anonymous Pro", serif;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    margin-left: auto;
+    text-decoration: underline;
+    padding: 3px;
+    cursor: pointer;
+    background-color: white;
+}

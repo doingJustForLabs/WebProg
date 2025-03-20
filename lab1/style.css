@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'BibleFont'; 
+    src: url('fonts/bible.ttf') format('truetype');
+}    
+
+body {
+    margin: 0;
+    background-color: wheat;
+    font-family: 'BibleFont', sans-serif; 
+    text-align: center;
+}
+
+header {
+    position: relative;
+
+    background-image: url('img/sky.jpg'); 
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+
+    padding: 50px 20px;
+
+    color:gold;
+    font-size: 32px;
+    font-weight: bold;
+    -webkit-text-stroke: 0.25px goldenrod;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+main {
+    background-image: url('img/frame.png');
+    background-size:auto;
+    background-position: center;
+    background-color:navajowhite;
+    padding: 20px 80px 20px;
+}
+
+section {
+    background-color: cornsilk;
+    display: flex;
+    border-radius: 30px;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+p {
+    text-align: left;
+    padding: 0px 40px 0px;
+}
+
+h2, h3 {
+    margin-top: 0px;
+}
+
+blockquote {
+    font-size: 25px;
+    font-style: italic;
+}
+
+td, th {
+    color: black;
+    border: 1px solid ;
+    text-align: left;
+    padding: 20px;
+  }
+
+.dove {
+    position: absolute;
+    top: 0px;
+    right: 250px;
+    width: 200px;
+    height: auto;
+}
+
+.kupola {
+    position: absolute;
+    top: 0px;
+    left: 240px;
+    width: 250px;
+    height: auto;
+}
+
+li {
+    text-align: left;
+    font-size: 20px;
+    margin: 10px 10px;
+}

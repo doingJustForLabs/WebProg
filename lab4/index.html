@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>BUY!!! BUY!!!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <script src="js/index.js"></script>
+    <script type="module" src="js/comments.js"></script>
+    <script type="module" src="js/cookies.js"></script>
+    <audio id="boom" style="display: none;" src="audio/boom.mp3"></audio>
+    <audio id="click" style="display: none;" src="audio/click.mp3"></audio>
+    <audio id="broke" style="display: none;" src="audio/break.ogg"></audio>
+    <audio id=":C" style="display: none;" src="audio/sad_trombone.mp3"></audio>
+    <audio id="NO" style="display: none;" src="audio/DENIED.mp3"></audio>
+    <header>
+        <nav id="top">
+            <img src="img/header-logo.png" class="logo" alt="ЛОГО">
+            <div class="menu">
+                <button class="menu-button">КАТАЛОГ</button>
+                <button class="menu-button">КОРЗИНА</button>
+                <button class="menu-button">КОНТАКТЫ</button>
+                <button class="menu-button">КУПИТЬ ВСЁ</button>
+                <!-- !!!ОСТОРОЖНО, ОЧЕНЬ ГРОМКО!!! -->
+                <button class="menu-button" onclick="boom()">ВЗОРВАТЬСЯ</button>
+                <img id="lightswitch" src="img/switch-on.png" alt="switcher" class="lights" onclick="lightSwitch()">
+            </div>
+
+        </nav>
+
+        <section class="banner" id="topBanner">
+            <img src="img/ad.gif" class="banner-img" alt="Рекламка 1">
+            <img src="img/adanim.gif" class="banner-img" alt="Рекламка 2">
+            <img src="img/movil.gif" class="banner-img" alt="Рекламка 3">
+            <img src="img/bannercercasponsor.gif" class="banner-img" alt="Рекламка 4">
+        </section>
+
+    </header>
+
+    <main>
+        <aside class="vertical-banner">
+            <img src="img/Pelicula2.gif" class="vert-banner-img" alt="Рекламка 5">
+            <img src="img/sina_logo.gif" class="vert-banner-img" alt="Рекламка 6">
+            <img src="img/bushfiread.gif" class="vert-banner-img" alt="Рекламка 7">
+            <img src="img/unpostointoilet.gif" class="vert-banner-img" alt="Рекламка 8">
+        </aside>
+
+        <article class="content" id="content">
+            <section class="product-content">
+                <h3>ХИТ ПРОДАЖ!!! СУПЕР-НОВИНКА!!! <br> РЕВОЛЮЦИОННОЕ РЕШЕНИЕ ДЛЯ МАМ И ПАП!</h3>
+                <h1>КЛЕТКА ДЛЯ АВТОМАТИЧЕСКОГО ПРОВЕТРИВАНИЯ™</h1>
+
+                <section class="card">
+                    <div class="descr">
+                        <p> Вы устали гулять с малышом? Ваш ребёнок капризничает без свежего воздуха, а у вас куча дел?
+                            Хотите, чтобы он дышал свежим воздухом, но нет времени на прогулки? <br>
+                            ЗАБУДЬТЕ О ХЛОПОТАХ! С нашей КЛЕТКОЙ ДЛЯ АВТОМАТИЧЕСКОГО ПРОВЕТРИВАНИЯ™ ваш ребёнок сам
+                            "выйдет" на улицу! <br><br>
+                            Клетка для автоматического проветривания™ – это удобный, надёжный и безопасный способ
+                            обеспечить малышу постоянный доступ к чистому воздуху, не выходя из дома! Просто установите
+                            конструкцию за окном, уложите ребёнка – и пусть природа позаботится о его здоровье.
+                            Проверенное решение для занятых родителей!
+                        </p>
+                    </div>
+                    <img src="img/inv-photo-sorry.jpg" class="product-img" alt="СУПЕР КРУТОЙ ТОВАР">
+                </section>
+
+                <h3>ПОЧЕМУ ВЫ ДОЛЖНЫ ВЫБРАТЬ ИМЕННО НАС?</h3>
+
+                <ol>
+                    <li> <span class="cool">НАДЁЖНОСТЬ!</span> СДЕЛАНА ИЗ ЛУЧШИЙ ОЦИНКОВАНЫХ ПРУТЬЕВ!</li>
+                    <li><span class="cool">КОМФОРТ!</span> МЯГКИЙ МАТРАСИК В ПОДАРОК!</li>
+                    <li><span class="cool">СВЕЖЕСТЬ!</span> БОЛЬШЕ НИКАКИХ ЗАПАХОВ!</li>
+                    <li><span class="cool">ЭКОНОМИЯ!</span> НОВОЕ СВОБОДНОЕ ПРОСТРАНСТВО!</li>
+                    <li><span class="cool">РАДОСТЬ!</span> ПРЕКРАСНЫЙ ВИД ИЗ ОКНА!</li>
+                </ol>
+
+                <h3>СУПЕР ЦЕНА – ВСЕГО <span class="cool">1499,99₽</span><br>
+                    БОНУС! Закажите прямо сейчас и получите СТРАХОВОЧНУЮ ВЕРЁВКУ БЕСПЛАТНО!</h3>
+
+                <p class="contacts">CПЕШИТЕ! <span class="cool">КОЛИЧЕСТВО ОГРАНИЧЕНО!</span><br>
+                    ЗАКАЗЫВАЙТЕ ПРЯМО СЕЙЧАС!<br>
+                    <span class="cool"> ЗВОНИТЕ 8-800-555-35-35 </span>
+                </p>
+            </section>
+
+
+            <aside class="comments-content" id="commentsContainer">
+                <h3>ОТЗЫВЫ НАШИХ ПОКУПАТЕЛЕЙ</h3>
+            </aside>
+
+            <aside class="comment-form">
+                <h3>ЕСТЬ МНЕНИЕ?<br>ОСТАВЬТЕ ОТЗЫВ ЗДЕСЬ!</h3>
+                <div class="form-item">
+                    <span class="cool">ВАШЕ ИМЯ:</span>
+                    <input type="text" id="inputUsername" placeholder="Введите ваше имя" maxlength="24">
+                </div>
+                <div class="form-item">
+                    <textarea type="text" class="input-main" id="inputComment" maxlength="350" placeholder="Опишите ваши ощущения от использования нашего продукта!"></textarea>
+                </div>
+                <div class="form-item">
+                    <span class="cool">ВАША ОЦЕНКА:</span>
+                    <div class="input-rating">
+
+                        <input type="radio" id="rating5" name="rating" value="5">
+                        <label for="rating5"></label>
+                        
+                        <input type="radio" id="rating4" name="rating" value="4">
+                        <label for="rating4"></label>
+                        
+                        <input type="radio" id="rating3" name="rating" value="3">
+                        <label for="rating3"></label>
+                        
+                        <input type="radio" id="rating2" name="rating" value="2">
+                        <label for="rating2"></label>
+                        
+                        <input type="radio" id="rating1" name="rating" value="1" checked>
+                        <label for="rating1"></label>
+
+                    </div>
+                    <button class="form-button" id="sendButton">ОТПРАВИТЬ ОТЗЫВ</button>
+                </div>
+            </aside>
+
+        </article>
+
+        <aside class="vertical-banner">
+            <img src="img/products_ad.gif" class="vert-banner-img" alt="Рекламка 9">
+            <img src="img/yourad.gif" class="vert-banner-img" alt="Рекламка 10">
+            <img src="img/bannerad2.gif" class="vert-banner-img" alt="Рекламка 11">
+            <img src="img/Ad2.gif" class="vert-banner-img" alt="Рекламка 12">
+        </aside>
+    </main>
+
+    <footer id="bottomBanner">
+        <img src="img/adsquire.gif" class="banner-img" alt="Рекламка 13">
+        <img src="img/walogo.gif" class="banner-img" alt="Рекламка 14">
+    </footer>
+
+</body>
+
+</html>
