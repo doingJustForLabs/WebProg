@@ -1,5 +1,8 @@
 @import url("reset.css");
+@import url("blocks.css");
+
 
 body {
     background-color: darkcyan;
 }
+
