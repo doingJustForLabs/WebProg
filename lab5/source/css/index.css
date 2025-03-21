@@ -30,3 +30,16 @@ body {
     border-radius: 4px;
     border: 1px solid #ddd;
 }
+
+
+.remove-block-btn,
+.remove-subblock-btn,
+.add-subblock-btn {
+    display: none !important;
+}
+
+.card[contenteditable="true"] .remove-block-btn,
+.card[contenteditable="true"] .remove-subblock-btn,
+.card[contenteditable="true"] .add-subblock-btn {
+    display: inline-block !important;
+}

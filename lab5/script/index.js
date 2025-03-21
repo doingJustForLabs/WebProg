@@ -1,16 +1,116 @@
+class Deletable {
+    // Метод для удаления элемента (блоков или сабблоков)
+    removeItem(items, index) {
+        if (index !== -1) {
+            items.splice(index, 1);
+        }
+    }
+}
+
 class Block {
     constructor(data, type) {
         this.data = data;
         this.type = type;
+        this.isEditing = false || data.isEditing;
+        this.deletable = new Deletable();
     }
 
     toHTML() {
         throw new Error("Method 'toHTML()' must be implemented.");
     }
+
+    toggleEditing() {
+        this.isEditing = !this.isEditing;
+        // buildPage(blocks); // Добавляем перерисовку страницы после изменения состояния
+    }
+
+    // Кнопки удаления блока
+    renderRemoveBlockButton(index) {
+        // return this.isEditing ? `<button class="remove-block-btn" data-block-index="${index}">Удалить блок</button>` : '';
+        return `<button class="remove-block-btn hidden" data-block-index="${index}">Удалить блок</button>`;
+    }
+    // удаление подблоков кнопка
+    renderRemoveSubblockButton(blockIndex, subIndex) {
+        return `<button class="remove-subblock-btn" data-block-index="${blockIndex}" data-sub-index="${subIndex}">Удалить подблок</button>`;
+    }
+
+    removeBlock(blocks, blockIndex) {
+        this.deletable.removeItem(blocks, blockIndex);
+    }
+
+    removeSubblock(subIndex) {
+        if (this.data.subblocks && this.data.subblocks[subIndex]) {
+            this.deletable.removeItem(this.data.subblocks, subIndex);
+        }
+    }
+
+    // Кнопка для добавления подблоков
+    renderAddSubblockButton() {
+        return `<button class="add-subblock-btn">Добавить подблок</button>`;
+    }
+
+    // Добавление подблока
+    addSubblockToBlock(subblock) {
+        if (!this.data.subblocks) {
+            this.data.subblocks = [];
+        }
+        this.data.subblocks.push(subblock);
+    }
 }
 
 
+class HeaderBlock extends Block {
+    constructor(data) {
+        super(data, 'HeaderBlock');
+    }
+
+    toHTML() {
+        return `
+            <div class="card" contenteditable="${this.isEditing}">
+                <h1>${this.data.content}</h1>
+            </div>
+        `;
+    }
+}
+
+class TextBlock extends Block{
+    constructor(data){
+        super({
+            title: data.title || '',
+            subblocks: (data.subblocks || []).map(sub => 
+                new SubBlock((sub.params || []).map(p => ({...p})))
+            ),
+            isEditing: data.isEditing // Добавляем сохранение состояния
+        }, 'TextBlock');
+    }
+
+    toHTML(index) {
+        const subblocksHTML = this.data.subblocks.map((subblock, subIndex) => `
+            <div class="subblock">
+                ${subblock.toHTML()}
+                ${this.renderRemoveSubblockButton(index, subIndex)}
+            </div>
+        `).join('');
+
+        return `
+            <div class="card" contenteditable="${this.isEditing}" data-block-index="${index}">
+                <h2>${this.data.title || 'Умное название'}</h2>
+                <!-- <p>${this.data.content}</p> --!>
+                ${subblocksHTML}
+                ${this.renderAddSubblockButton()}
+                ${this.renderRemoveBlockButton(index)}
+            </div>
+        `;
+    }
+    // addSubblockToBlock(subblock) {
+    //     super.addSubblockToBlock(subblock); // Используем метод родителя для добавления
+    // }
+}
+
 // dont touch, son, it doesn't work   (UPD: yeahhh)
+/**
+ * Подблоки внутри блока TextBlock
+ */
 class SubBlock {                // Если вы видите этот класс незакомменченным, то автор либо умер, либо чёт в жизни у него не то //UPD: 20/03/2025 12:09 - It is working
     constructor(params, id) {
         this.id = id || Date.now() + Math.random(); // Учитываем переданный ID
@@ -21,6 +121,10 @@ class SubBlock {                // Если вы видите этот клас�
     }
 
     toHTML() {
+        if (this.params.length === 0) {
+            return `<div class="subblock" data-subblock-id="${this.id}">Параметры отсутствуют</div>`;
+        }
+
         return `
             <div class="subblock" data-subblock-id="${this.id}">
                 <!-- <h4>${this.title}</h4> --!>
@@ -36,65 +140,19 @@ class SubBlock {                // Если вы видите этот клас�
     }
 }
 
-class TextBlock extends Block{
-    constructor(data){
-        super(data, 'TextBlock');
-        // this.data.subblocks = this.data.subblocks || [];
-        this.data = {
-            title: data.title || '', // Добавляем заголовок
-            subblocks: (data.subblocks || []).map(sub => 
-                new SubBlock((sub.params || []).map(p => ({...p})))
-            )
-        };
-    }
-
-    toHTML(index) {
-        const subblocksHTML = this.data.subblocks.map((subblock, subIndex) => `
-            <div class = "subblock">
-                ${subblock.toHTML()}
-                <button class = "remove-subblock-btn" data-block-index="${index}" data-sub-index="${subIndex}">Удалить подблок</button>
-            </div>
-        `).join('');
-
-        return `
-            <div class="card" contenteditable="false" data-block-index="${index}">
-                <h2>${this.data.title || 'Впишите ваше'}</h2>
-                <!-- <p>${this.data.content}</p> --!>
-                ${subblocksHTML}
-                <!-- Кнопка для добавления подблоков -->
-                <button class="add-subblock-btn">Добавить подблок</button>
-            </div>
-        `;
-    }
-}
-
-
-class HeaderBlock extends Block {
-    constructor(data) {
-        super(data, 'HeaderBlock');
-    }
-
-    toHTML() {
-        return `
-            <div class="card">
-                <h1>${this.data.content}</h1>
-            </div>
-        `;
-    }
-}
-
 class StatsBlock extends Block {
     constructor(data) {
         super(data, 'StatsBlock');
     }
 
-    toHTML() {
+    toHTML(index) {
         return `
-            <div class="card">
+            <div class="card" contenteditable="${this.isEditing}" data-block-index="${index}">
                 <h2>${this.data.title || 'Характеристики'}</h2>
                 <ul>
-                    ${this.data.stats.map(stat => `<li><strong>${stat.name}:</strong> ${stat.value}</li>`).join('')}
+                    ${this.data.stats.map(stat => `<li>${stat.name}: ${stat.value}</li>`).join('')}
                 </ul>
+                ${this.renderRemoveBlockButton(index)}
             </div>
         `;
     }
@@ -105,13 +163,14 @@ class SkillsBlock extends Block {
         super(data, 'SkillsBlock');
     }
 
-    toHTML() {
+    toHTML(index) {
         return `
-            <div class="card">
+            <div class="card" contenteditable="${this.isEditing}" data-block-index="${index}">
                 <h2>${this.data.title || 'Навыки'}</h2>
                 <ul>
                     ${this.data.skills.map(skill => `<li>${skill}</li>`).join('')}
                 </ul>
+                ${this.renderRemoveBlockButton(index)}
             </div>
         `;
     }
@@ -122,13 +181,14 @@ class InventoryBlock extends Block {
         super(data, 'InventoryBlock');
     }
 
-    toHTML() {
+    toHTML(index) {
         return `
-            <div class="card">
+            <div class="card" contenteditable="${this.isEditing}" data-block-index="${index}">
                 <h2>${this.data.title || 'Инвентарь'}</h2>
                 <ul>
                     ${this.data.items.map(item => `<li>${item}</li>`).join('')}
                 </ul>
+                ${this.renderRemoveBlockButton(index)}
             </div>
         `;
     }
@@ -136,43 +196,11 @@ class InventoryBlock extends Block {
 
 function addSubblock(buttonElement, blocks){
     const blockElement = buttonElement.closest('.card');
-    // const blockIndex = Array.from(blockElement.parentElement.children).indexOf(blockElement);
     const blockIndex = parseInt(blockElement.dataset.blockIndex);
-
-    // Проверяем, что blockIndex корректен
-    if (isNaN(blockIndex)) {
-        console.error('Некорректный индекс блока:', blockIndex);
-        return;
-    }
-    if (blockIndex < 0 || blockIndex >= blocks.length) {
-        console.error('Индекс блока выходит за пределы массива:', blockIndex);
-        return;
-    }
 
     const block = blocks[blockIndex];
 
-    // Проверяем, что блок является TextBlock
-    if (block.type !== 'TextBlock') {
-        console.error('Подблоки можно добавлять только в TextBlock');
-        return;
-    }
-
-    // Инициализируем subblocks, если они не существуют
-    if (!block.data.subblocks) {
-        block.data.subblocks = [];
-    }
-
-    // Очищаем subblocks перед добавлением новых
-    // block.data.subblocks = []; // Очистка subblocks
-
-    // const hasDuplicate = block.data.subblocks.some(sub => 
-    //     sub.params[0]?.name === 'Параметр 1' && sub.params[0]?.value === 'Какой-то'
-    // );
-    
-    // if (!hasDuplicate) {
-    //     block.data.subblocks.push(new SubBlock([{ name: 'Параметр 1', value: 'Какой-то' }]));
-    // }
-    block.data.subblocks.push(new SubBlock(
+    block.addSubblockToBlock(new SubBlock(
         [{
             name: `Параметр ${block.data.subblocks.length + 1}`,
             value: '',
@@ -186,23 +214,48 @@ function addSubblock(buttonElement, blocks){
 }
 
 function removeSubblock(buttonElement, blocks){
-    const blockElement = buttonElement.closest('.card');
-    const blockIndex = parseInt(blockElement.dataset.blockIndex);
-    const subblockIndex = parseInt(buttonElement.dataset.index);
+    const blockIndex = parseInt(buttonElement.dataset.blockIndex);
+    const subblockIndex = parseInt(buttonElement.dataset.subIndex);
+    
+    console.log("Удаление подблока:", blockIndex, subblockIndex); // Для отладки
 
+    if (!isNaN(blockIndex) && !isNaN(subblockIndex)) {
+        const block = blocks[blockIndex];
+        block.removeSubblock(subblockIndex);
+        buildPage(blocks);
+    } else {
+        console.error("Некорректные индексы:", blockIndex, subblockIndex);
+    }
+}
+
+function removeBlock(buttonElement, blocks) {
+    const blockIndex = parseInt(buttonElement.dataset.blockIndex);
     const block = blocks[blockIndex];
-
-    //Удаление
-    block.data.subblocks.splice(subblockIndex, 1);
-
+    block.removeBlock(blocks, blockIndex);
     buildPage(blocks);
 }
 
 function buildPage(blocks) {
     const blocksContainer = document.getElementById('blocks-container');
-    blocksContainer.innerHTML = ''; // Очищаем только контейнер с блоками
+
+    const prevStates = blocks.map(block => block.isEditing);
+
+    // blocksContainer.innerHTML = ''; // Очищаем только контейнер с блоками
+    // blocks.forEach((block, index) => {
+    //     blocksContainer.innerHTML += block.toHTML(index);
+    // });
+
+    blocksContainer.innerHTML = '';
     blocks.forEach((block, index) => {
+        // Восстанавливаем состояние перед рендерингом
+        block.isEditing = prevStates[index];
         blocksContainer.innerHTML += block.toHTML(index);
+    });
+
+    // Обновляем атрибуты contenteditable
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.setAttribute('contenteditable', blocks[index].isEditing);
     });
 }
 
@@ -230,7 +283,8 @@ function restoreBlocks(savedBlocks) {
                             ...p,
                             id: p.id // Сохраняем ID параметра
                         }))
-                    }))
+                    })),
+                    isEditing: block.data.isEditing // Восстанавливаем состояние
                 });
             default:
                 throw new Error(`Unknown block type: ${block.type}`);
@@ -241,25 +295,13 @@ function restoreBlocks(savedBlocks) {
     return restoredBlocks;
 }
 
+function isValidNumber(value) {
+    return !isNaN(value) && !isNaN(parseFloat(value));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     let savedBlocks = JSON.parse(localStorage.getItem('blocks')) || [
         { type: 'HeaderBlock', data: { content: 'Эльф-лучник' } },
-        // { type: 'StatsBlock', data: {
-        //     stats: [
-        //         { name: 'Сила', value: 12 },
-        //         { name: 'Ловкость', value: 18 },
-        //         { name: 'Интеллект', value: 14 }
-        //     ],
-        //     subblocks: [
-        //         new SubBlock('Дополнительные характеристики', [
-        //             { name: 'Выносливость', value: 'Высокая' },
-        //             { name: 'Магия', value: 'Средняя' }
-        //         ]),
-        //         new SubBlock('Опыт', [
-        //             { name: 'Очки опыта', value: '1200' }
-        //         ])
-        //     ]
-        // }},
         { type: 'StatsBlock', data: { 
             title: 'Характеристики',
             stats: [
@@ -286,18 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     controlsContainer.id = 'controls';
     document.body.prepend(controlsContainer);
 
-    // Режим редактирования
-    const editToggle = document.createElement('button');
-    editToggle.textContent = 'Редактировать';
-    controlsContainer.append(editToggle);
-
-    editToggle.addEventListener('click', () => {
-        const blocksContainer = document.getElementById('blocks-container');
-        Array.from(blocksContainer.children).forEach((blockElement, index) => {
-            blockElement.contentEditable = true;
-        });
-    });
-
     // Сохранение изменений
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Сохранить';
@@ -305,8 +335,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveButton.addEventListener('click', () => {
         const blocksContainer = document.getElementById('blocks-container');
+
         blocks.forEach((block, index) => {
             const blockElement = blocksContainer.children[index];
+
             switch (block.type) {
                 case 'HeaderBlock':
                     block.data.content = blockElement.querySelector('h1').innerText;
@@ -315,8 +347,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     block.data.title = blockElement.querySelector('h2').innerText;
                     block.data.stats = Array.from(blockElement.querySelectorAll('li')).map(li => {
                         const [name, value] = li.innerText.split(':').map(s => s.trim());
-                        return { name, value: parseInt(value, 10) };
+                        if (!isValidNumber(value)) {
+                            alert(`Ошибка: значение для "${name}" должно быть числом!`);
+                            return {
+                                name,
+                                value: 0
+                            }
+                        }
+                        
+                        return { 
+                            name, 
+                            value: Number(value) // Преобразуем в число
+                        }
                     });
+
                     break;
                 case 'SkillsBlock':
                     block.data.skills = Array.from(blockElement.querySelectorAll('li')).map(li => li.innerText);
@@ -354,18 +398,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(`Block ${index} subblocks after update:`, block.data.subblocks);
                     break;
             }
+
+            // Выключаем редактирование после сохранения
+            // block.isEditing = false;
+            // block.toggleEditing();
+            console.log(block.isEditing);
         });
         localStorage.setItem('blocks', JSON.stringify(blocks.map(block => ({
             type: block.type,
             data: {
                 ...block.data,
-                // subblocks: block.data.subblocks ? 
-                //     // Удаляем дубликаты по уникальному ключу (например, name)
-                //     block.data.subblocks.filter((sub, index, self) => 
-                //         self.findIndex(s => s.params[0]?.name === sub.params[0]?.name) === index
-                //     ).map(sub => ({ params: sub.params })) 
-                //     : []
-                // subblocks: block.data.subblocks.map(sub => ({ params: sub.params }))
+                isEditing: block.isEditing, // Сохраняем состояние
                 subblocks: (block.data.subblocks || []).map(sub => ({
                     id: sub.id, // Сохраняем ID подблока
                     params: sub.params.map(p => ({
@@ -376,8 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }))
             }
         }))));
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.setAttribute('contenteditable', 'false');
+        });
         console.log('After saving:', JSON.parse(localStorage.getItem('blocks')));
-
+        // buildPage(blocks);
         alert('Изменения сохранены!');
     });
 
@@ -389,27 +436,57 @@ document.addEventListener('DOMContentLoaded', () => {
     controlsContainer.append(addTextBlockButton);
 
     addTextBlockButton.addEventListener('click', () => {
-        // blocks.push(new TextBlock({ content: 'Новый текстовый блок' }));
+        // Проверяем режим редактирования только для нового блока
+        const isAnyEditing = blocks.some(block => block.isEditing);
+        
+        if (!isAnyEditing) {
+            alert('Для добавления блока включите режим редактирования!');
+            return;
+        }
+
+        // Создаем новый блок сразу в режиме редактирования
         const newBlock = new TextBlock({ 
-            content: 'Новый текстовый блок', 
-            subblocks: [] // Явно передаём пустой массив subblocks
+            title: 'Новый блок',
+            subblocks: [],
+            isEditing: true // Явно устанавливаем режим редактирования
         });
+        
         blocks.push(newBlock);
-        console.log('New block added:', newBlock);
         buildPage(blocks);
+        
+        // Сохраняем состояние редактирования для всех блоков
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.setAttribute('contenteditable', blocks[index].isEditing);
+        });
+    });
+
+    // Режим редактирования
+    const editToggle = document.createElement('button');
+    editToggle.textContent = 'Редактировать';
+    controlsContainer.append(editToggle);
+
+    editToggle.addEventListener('click', () => {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            const isEditing = card.getAttribute('contenteditable') === 'true';
+            // Синхронизируем состояние с объектом блока
+            blocks[index].isEditing = !isEditing; 
+            card.setAttribute('contenteditable', !isEditing);
+        });
     });
 
     // Удаление последнего блока
-    const removeBlockButton = document.createElement('button');
-    removeBlockButton.textContent = 'Удалить последний блок';
-    controlsContainer.append(removeBlockButton);
+    // const removeBlockButton = document.createElement('button');
+    // removeBlockButton.textContent = 'Удалить последний блок';
+    // controlsContainer.append(removeBlockButton);
 
-    removeBlockButton.addEventListener('click', () => {
-        if (blocks.length > 1) {
-            blocks.pop();
-            buildPage(blocks);
-        }
-    });
+    // removeBlockButton.addEventListener('click', () => {
+    //     if (blocks.length > 1) {
+    //         blocks.pop();
+    //         buildPage(blocks);
+    //     }
+    // });
 
     // Назначаем обработчик на родительский элемент
     document.getElementById('blocks-container').addEventListener('click', (e) => {
@@ -419,9 +496,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('remove-subblock-btn')) {
             removeSubblock(e.target, blocks);
         }
+
+        if (e.target.classList.contains('remove-block-btn')) {
+            removeBlock(e.target, blocks);
+        }
     });
-    // document.querySelector('.add-subblock-btn').onclick = (e) => addSubblock(e.target, blocks);
-    // document.querySelector('.remove-subblock-btn').onclick = (e) => removeSubblock(e.target, subblockIndex, blocks);
 });
 
 // localStorage.removeItem('blocks');
