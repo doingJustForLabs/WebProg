@@ -3,14 +3,14 @@ import { TextBlock, OrderedListBlock, PictureBlock} from "../js/blocks.js";
 
 let editMode = false;
 
-let tb1 = new TextBlock("ПЕРВЫЙ");
-root.addBlock(tb1);
+let tb = new TextBlock("ПЕРВЫЙ");
+root.addBlock(tb);
 
-let tb2 = new TextBlock("ВТОРОЙ");
-root.addBlock(tb2);
+let olb = new OrderedListBlock("ВТОРОЙ");
+root.addBlock(olb);
 
-let tb3 = new TextBlock("ТРЕТИЙ");
-root.addBlock(tb3);
+let pb = new PictureBlock("ТРЕТИЙ");
+root.addBlock(pb);
 
 
 document.addEventListener("DOMContentLoaded", () => {
