@@ -11,7 +11,8 @@ class Block {
     constructor(data, type) {
         this.data = data;
         this.type = type;
-        this.isEditing = false || data.isEditing;
+        this.isEditing = data.isEditing || false;
+        // this.isEditing = false;
         this.deletable = new Deletable();
     }
 
@@ -27,11 +28,26 @@ class Block {
     // Кнопки удаления блока
     renderRemoveBlockButton(index) {
         // return this.isEditing ? `<button class="remove-block-btn" data-block-index="${index}">Удалить блок</button>` : '';
-        return `<button class="remove-block-btn hidden" data-block-index="${index}">Удалить блок</button>`;
+        return this.isEditing ? `
+            <div class="block-actions">
+                <button class="remove-block-btn" data-block-index="${index}">
+                    <img src="../source/img/delete-icon.svg" alt="Удалить блок" class="button-icon" contenteditable="${this.isEditing}">
+                </button>
+            </div>
+        ` : '';
     }
     // удаление подблоков кнопка
     renderRemoveSubblockButton(blockIndex, subIndex) {
-        return `<button class="remove-subblock-btn" data-block-index="${blockIndex}" data-sub-index="${subIndex}">Удалить подблок</button>`;
+        if (this.isEditing && this.data.subblocks && this.data.subblocks.length > 0) {
+            return `
+            <div class="subblock-actions">
+                <button class="remove-subblock-btn" data-block-index="${blockIndex}" data-sub-index="${subIndex}" contenteditable="${this.isEditing}">
+                    <img src="../source/img/delete-icon.svg" alt="Удалить подблок" class="button-icon">
+                </button>
+            </div>
+            `;
+        }
+        return '';
     }
 
     removeBlock(blocks, blockIndex) {
@@ -46,7 +62,11 @@ class Block {
 
     // Кнопка для добавления подблоков
     renderAddSubblockButton() {
-        return `<button class="add-subblock-btn">Добавить подблок</button>`;
+        return `
+            <button class="add-subblock-btn">
+                <img src="../source/img/add-icon.svg" alt="Добавить подблок" class="button-icon" contenteditable="${this.isEditing}">
+            </button>
+        `;
     }
 
     // Добавление подблока
@@ -66,7 +86,7 @@ class HeaderBlock extends Block {
 
     toHTML() {
         return `
-            <div class="card" contenteditable="${this.isEditing}">
+            <div class="card header-block" contenteditable="${this.isEditing}">
                 <h1>${this.data.content}</h1>
             </div>
         `;
@@ -94,11 +114,13 @@ class TextBlock extends Block{
 
         return `
             <div class="card" contenteditable="${this.isEditing}" data-block-index="${index}">
+                <div class="block-actions">
+                    ${this.renderRemoveBlockButton(index)}
+                </div>
                 <h2>${this.data.title || 'Умное название'}</h2>
                 <!-- <p>${this.data.content}</p> --!>
                 ${subblocksHTML}
                 ${this.renderAddSubblockButton()}
-                ${this.renderRemoveBlockButton(index)}
             </div>
         `;
     }
@@ -122,12 +144,15 @@ class SubBlock {                // Если вы видите этот клас�
 
     toHTML() {
         if (this.params.length === 0) {
-            return `<div class="subblock" data-subblock-id="${this.id}">Параметры отсутствуют</div>`;
+            return `
+                <div class="subblock" data-subblock-id="${this.id}">
+                    <!-- Параметры отсутствуют --!>
+                </div>
+            `;
         }
 
         return `
             <div class="subblock" data-subblock-id="${this.id}">
-                <!-- <h4>${this.title}</h4> --!>
                 <ul>
                     ${this.params.map(param => `
                         <li data-param-id="${param.id}">
@@ -244,14 +269,14 @@ function buildPage(blocks) {
     // blocks.forEach((block, index) => {
     //     blocksContainer.innerHTML += block.toHTML(index);
     // });
-
+    
     blocksContainer.innerHTML = '';
     blocks.forEach((block, index) => {
         // Восстанавливаем состояние перед рендерингом
         block.isEditing = prevStates[index];
         blocksContainer.innerHTML += block.toHTML(index);
     });
-
+    
     // Обновляем атрибуты contenteditable
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
@@ -259,6 +284,7 @@ function buildPage(blocks) {
     });
 }
 
+// восстановление блоков
 function restoreBlocks(savedBlocks) {
     const restoredBlocks = savedBlocks.map(block => {
         if (!block.type) {
@@ -295,27 +321,31 @@ function restoreBlocks(savedBlocks) {
     return restoredBlocks;
 }
 
+
+// проверка в поле ввода, что это циферка
 function isValidNumber(value) {
     return !isNaN(value) && !isNaN(parseFloat(value));
 }
 
+// загрузка домика из мультика "Вверх"
 document.addEventListener('DOMContentLoaded', () => {
     let savedBlocks = JSON.parse(localStorage.getItem('blocks')) || [
-        { type: 'HeaderBlock', data: { content: 'Эльф-лучник' } },
+        { type: 'HeaderBlock', data: { content: 'Holnstein' } },
         { type: 'StatsBlock', data: { 
             title: 'Характеристики',
             stats: [
-            { name: 'Сила', value: 12 },
-            { name: 'Ловкость', value: 18 },
-            { name: 'Интеллект', value: 14 }
+            { name: 'Задолбался', value: 25 },
+            { name: 'Оскуфел', value: 18 },
+            { name: 'Интеллект', value: -14 },
+            { name: 'Факт. Возраст согласия', value: 16}
         ] } },
         { type: 'SkillsBlock', data: { 
             title: 'Навыки',
-            skills: ['Стрельба из лука', 'Скрытность', 'Выживание'] 
+            skills: ['Мостик', 'Полторашка', 'Гуру кринжа', 'Навык пьяного без алкоголя'] 
         } },
         { type: 'InventoryBlock', data: { 
             title: 'Инвентарь',
-            items: ['Лук', 'Стрелы', 'Палатка'],
+            items: ['Глубокий поиск', 'СРФЕ ПЗЕ', 'Хуявей пу 40 светлый/легкий'],
         } }
     ];
 
@@ -330,10 +360,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Сохранение изменений
     const saveButton = document.createElement('button');
-    saveButton.textContent = 'Сохранить';
+    saveButton.innerHTML = '<img src="../source/img/save-icon1.svg" id = "save-icon" class="button-icon">';
+    saveButton.classList.add('saveButton');
     controlsContainer.append(saveButton);
 
+    // сохраняем в локале стораге блоки
     saveButton.addEventListener('click', () => {
+        addTextBlockButton.classList.remove('visible');
+
         const blocksContainer = document.getElementById('blocks-container');
 
         blocks.forEach((block, index) => {
@@ -354,13 +388,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 value: 0
                             }
                         }
-                        
                         return { 
                             name, 
                             value: Number(value) // Преобразуем в число
                         }
                     });
-
                     break;
                 case 'SkillsBlock':
                     block.data.skills = Array.from(blockElement.querySelectorAll('li')).map(li => li.innerText);
@@ -400,29 +432,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Выключаем редактирование после сохранения
-            // block.isEditing = false;
+            block.isEditing = false;
             // block.toggleEditing();
             console.log(block.isEditing);
         });
-        localStorage.setItem('blocks', JSON.stringify(blocks.map(block => ({
-            type: block.type,
-            data: {
-                ...block.data,
-                isEditing: block.isEditing, // Сохраняем состояние
-                subblocks: (block.data.subblocks || []).map(sub => ({
-                    id: sub.id, // Сохраняем ID подблока
-                    params: sub.params.map(p => ({
-                        id: p.id, // Сохраняем ID параметра
-                        name: p.name,
-                        value: p.value
+        // localStorage.setItem('userName', 'Elfimova_KC-24');
+        localStorage.setItem('blocks', JSON.stringify({
+            author: 'Elfimova_KC-24',
+            blocks: blocks.map(block => ({
+                type: block.type,
+                data: {
+                    ...block.data,
+                    isEditing: false, // Сохраняем состояние редактирования или нет (нет)
+                    subblocks: (block.data.subblocks || []).map(sub => ({
+                        id: sub.id, // Сохраняем ID подблока
+                        params: sub.params.map(p => ({
+                            id: p.id, // Сохраняем ID параметра
+                            name: p.name,
+                            value: p.value
+                        }))
                     }))
-                }))
-            }
-        }))));
+                }
+            }))   
+        }));
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
             card.setAttribute('contenteditable', 'false');
         });
+
+        // Перерисовываем страницу
+        buildPage(blocks);
+
+        // Обновляем иконку кнопки редактирования
+        editToggle.innerHTML = '<img src="../source/img/edit-false.svg" class="button-icon">';
+
         console.log('After saving:', JSON.parse(localStorage.getItem('blocks')));
         // buildPage(blocks);
         alert('Изменения сохранены!');
@@ -430,19 +473,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Before saving:', blocks);
 
+    
+
+    // Режим редактирования
+    const editToggle = document.createElement('button');
+    editToggle.innerHTML  = '<img src="../source/img/edit-false.svg" class="button-icon">';
+    editToggle.classList.add('editToggle')
+    controlsContainer.append(editToggle);
+
+    editToggle.addEventListener('click', () => {
+        const isCurrentlyEditing = !blocks.some(block => block.isEditing);
+    
+        blocks.forEach(block => {
+            block.isEditing = isCurrentlyEditing;
+        });
+
+        buildPage(blocks);
+        
+        if (isCurrentlyEditing) {
+            addTextBlockButton.classList.add('visible');
+            editToggle.innerHTML = '<img src="../source/img/edit-true.svg" class="button-icon">';
+        } else {
+            addTextBlockButton.classList.remove('visible');
+            editToggle.innerHTML = '<img src="../source/img/edit-false.svg" class="button-icon">';
+        }
+    });
+
     // Добавление нового текстового блока
     const addTextBlockButton = document.createElement('button');
-    addTextBlockButton.textContent = 'Добавить блок';
+    addTextBlockButton.innerHTML = '<img src="../source/img/add-icon.svg" class="button-icon">';
+    addTextBlockButton.classList.add('addTextBlockButton');
     controlsContainer.append(addTextBlockButton);
 
     addTextBlockButton.addEventListener('click', () => {
         // Проверяем режим редактирования только для нового блока
-        const isAnyEditing = blocks.some(block => block.isEditing);
+        // const isAnyEditing = blocks.some(block => block.isEditing);
         
-        if (!isAnyEditing) {
-            alert('Для добавления блока включите режим редактирования!');
-            return;
-        }
+        // if (!isAnyEditing) {
+        //     alert('Для добавления блока включите режим редактирования!');
+        //     return;
+        // }
 
         // Создаем новый блок сразу в режиме редактирования
         const newBlock = new TextBlock({ 
@@ -461,21 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Режим редактирования
-    const editToggle = document.createElement('button');
-    editToggle.textContent = 'Редактировать';
-    controlsContainer.append(editToggle);
-
-    editToggle.addEventListener('click', () => {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach((card, index) => {
-            const isEditing = card.getAttribute('contenteditable') === 'true';
-            // Синхронизируем состояние с объектом блока
-            blocks[index].isEditing = !isEditing; 
-            card.setAttribute('contenteditable', !isEditing);
-        });
-    });
-
     // Удаление последнего блока
     // const removeBlockButton = document.createElement('button');
     // removeBlockButton.textContent = 'Удалить последний блок';
@@ -487,18 +542,18 @@ document.addEventListener('DOMContentLoaded', () => {
     //         buildPage(blocks);
     //     }
     // });
-
-    // Назначаем обработчик на родительский элемент
     document.getElementById('blocks-container').addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-subblock-btn')) {
-            addSubblock(e.target, blocks);
+        const target = e.target.closest('button');
+        if (!target) return;
+    
+        if (target.classList.contains('add-subblock-btn')) {
+            addSubblock(target, blocks);
         }
-        if (e.target.classList.contains('remove-subblock-btn')) {
-            removeSubblock(e.target, blocks);
+        if (target.classList.contains('remove-subblock-btn')) {
+            removeSubblock(target, blocks);
         }
-
-        if (e.target.classList.contains('remove-block-btn')) {
-            removeBlock(e.target, blocks);
+        if (target.classList.contains('remove-block-btn')) {
+            removeBlock(target, blocks);
         }
     });
 });
