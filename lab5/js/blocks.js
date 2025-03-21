@@ -1,38 +1,65 @@
-import {Style} from "../js/style.js";
-
 export class Block {
+    constructor (header = ""){
+        this.header = header;
+        this._type = "Block";
+        this._id = "";
+    }
+
+    getHTML = () => {
+        return `<div></div>`
+    };
+
+    getType = () => {
+        return this._type;
+    };
+}
+
+export class TextBlock extends Block {
     /**
      * Создаёт блок текста.
-     * @param {string} text - текст (<p>).
-     * @param {Style} style - стиль блока.
+     * @param {string} header - название блока (заголовок).
+     * @param {string} text - основной текст.
      */
-    constructor (text = "Текст", style = {}){
-        style = typeof(style) === "object" ? new Style(style) : style;
+    constructor (header = "Заголовок", text = "Текст"){
+        super(header);
         this.text = text;
-        this.style = style;
+        this._type = "TextBlock";
     }
 
     /**
      * Возвращает HTML предтавление блока.
      * @returns {string}
      */
-    getHTML = () => {
-        const style = this.style.stringify() === "" ? "" : ` style = "${this.style.stringify()}"`;
-        return `<p class="block"${style}>\n\t${this.text}\n</p>\n`  
+    getHTML = (editMode) => {
+        if (editMode){
+            return `<div class="env">
+                        <div class="block-tools">
+                            <button name="deleteBlock" class="tool-button">
+                                <img src="../img/delete-icon.svg" alt="Удалить" class="icon">
+                            </button>
+                            <button name="editTextBlock" class="tool-button">
+                                <img src="../img/edit-icon.svg" alt="Изменить" class="icon">
+                            </button>
+                        </div>
+                        <div class="block" id="${this._id}">
+                            <h2>${this.header}</h2>
+                            <p>${this.text}</p>
+                        </div>
+                    </div>`
+        }
+        return `<div class="block" id="${this._id}">
+                    <h2>${this.header}</h2>
+                    <p>${this.text}</p>
+                </div>`
     };
 }
 
-/**
- * Блок текста с заголовком.
- */
-export class Header extends Block {
-    /**
-     * Создаёт блок текста с заголовком.
-     * @param {string} text - текст заголовка (<h1>).
-     * @param {Style} style - стили блока.
-     */
-    constructor (text = "Заголовок", style = {}) {
-        super(text, style);
+export class OrderedListBlock extends Block {
+
+    constructor (header="Заголовок", items=["Элемент №1", "Элемент №3", "Элемент №4"]){
+        super(header);
+        this.items = items;
+        this._type = "OrderedListBlock";
     }
 
     /**
@@ -40,59 +67,37 @@ export class Header extends Block {
      * @returns {string}
      */
         getHTML = () => {
-        const style = this.style.stringify() === "" ? "" : ` style = "${this.style.stringify()}"`;
-        return `<h1 class="header"${style}>\n\t${this.text}\n</h1>\n`
+            const listItems = this.items.map(item => `<li>${item}</li>`).join('');
+
+            return `
+            <div class="block" id="${this._id}">
+                <h2>${this.header}</h2>
+                <ol>${listItems}</ol>
+            </div>`;
         };
 }
 
-/**
- * Контейнер блоков.
- */
-export class Container {
-    /**
-     * Создаёт контейнер для блоков.
-     * @param {Array<Block>} blocksArray - массив блоков.
-     * @param {string} direction - режим отображения:
-     * row - в строку
-     * col - в столбец
-     */
-    constructor (blocksArray = [], direction = "row"){
-        this.blocks = [...blocksArray];
-        this.direction = direction;
+export class PictureBlock extends Block {
+    constructor(header = "Заголовок", text = "Текст", imageUrl = "../img/default.jpeg") {
+        super(header);
+        this.text = text;
+        this.imageUrl = imageUrl;
+        this._type = "PictureBlock";
     }
 
     /**
-     * Добавляет блок в контейнер.
-     * @param {Block} block 
+     * Возвращает HTML представление блока с изображением.
+     * @returns {string}
      */
-    addBlock = (block) =>{
-        this.blocks.push(block);
-    }
-    
-    setBlocks = (blocks) => {
-        this.blocks = blocks;
-    }
-
     getHTML = () => {
-        const blocksHTML = this.blocks.map(block => block.getHTML()).join('');
-        return `<div class="container">
-            ${blocksHTML}
-        </div>\n`;
-    }
-
-}
-
-class Root extends Container{
-
-    getHTML = () => {
-        const blocksHTML = this.blocks.map(block => block.getHTML()).join('');
-        console.log(`<div id="root" class="root">\n\t${blocksHTML}</div>\n`);
-        return `<div id="root" class="root">\n\t${blocksHTML}\n</div>\n`;
-      }
-
-    render = () => {
-        document.body.innerHTML += this.getHTML();
-      }
-}
-
-export const root = new Root();
+        return `
+            <div class="twopart-block" id="${this._id}">
+                <img src="${this.imageUrl}" alt="${this.header}">
+                <div class="block">
+                    <h2>${this.header}</h2>
+                    <p>${this.text}</p>
+                </div>
+            </div>
+        `;
+    };
+};

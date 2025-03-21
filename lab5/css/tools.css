@@ -1,0 +1,39 @@
+#add-block-button {
+    order: 3;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    align-self: center;
+}
+
+.tool-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.big-icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    filter: invert(100%) brightness(100000%);
+}
+
+.block-tools {
+    display: flex;
+    flex-direction: row;
+    background-color: #0e8cda;
+    padding: 5px;
+    justify-self: left;
+    margin: 10px;
+    margin-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+}
