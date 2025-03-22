@@ -286,7 +286,8 @@ function buildPage(blocks) {
 
 // восстановление блоков
 function restoreBlocks(savedBlocks) {
-    const restoredBlocks = savedBlocks.map(block => {
+    const blocksArray = savedBlocks.blocks;
+    const restoredBlocks = blocksArray.map(block => {
         if (!block.type) {
             console.error('Block type is missing:', block);
             return null; // Пропустить блок без типа
@@ -329,25 +330,28 @@ function isValidNumber(value) {
 
 // загрузка домика из мультика "Вверх"
 document.addEventListener('DOMContentLoaded', () => {
-    let savedBlocks = JSON.parse(localStorage.getItem('blocks')) || [
-        { type: 'HeaderBlock', data: { content: 'Holnstein' } },
-        { type: 'StatsBlock', data: { 
-            title: 'Характеристики',
-            stats: [
-            { name: 'Задолбался', value: 25 },
-            { name: 'Оскуфел', value: 18 },
-            { name: 'Интеллект', value: -14 },
-            { name: 'Факт. Возраст согласия', value: 16}
-        ] } },
-        { type: 'SkillsBlock', data: { 
-            title: 'Навыки',
-            skills: ['Мостик', 'Полторашка', 'Гуру кринжа', 'Навык пьяного без алкоголя'] 
-        } },
-        { type: 'InventoryBlock', data: { 
-            title: 'Инвентарь',
-            items: ['Глубокий поиск', 'СРФЕ ПЗЕ', 'Хуявей пу 40 светлый/легкий'],
-        } }
-    ];
+    let savedBlocks = JSON.parse(localStorage.getItem('blocks')) || {
+        // author: '31_Elfimova_web',
+        blocks: [
+            { type: 'HeaderBlock', data: { content: 'Holnstein' } },
+            { type: 'StatsBlock', data: { 
+                title: 'Характеристики',
+                stats: [
+                { name: 'Задолбался', value: 25 },
+                { name: 'Оскуфел', value: 18 },
+                { name: 'Интеллект', value: -14 },
+                { name: 'Факт. Возраст согласия', value: 16}
+            ] } },
+            { type: 'SkillsBlock', data: { 
+                title: 'Навыки',
+                skills: ['Мостик', 'Полторашка', 'Гуру кринжа', 'Навык пьяного без алкоголя'] 
+            } },
+            { type: 'InventoryBlock', data: { 
+                title: 'Инвентарь',
+                items: ['Глубокий поиск', 'СРФЕ ПЗЕ', 'Хуявей пу 40 светлый/легкий'],
+            } }
+        ]
+    };
 
     let blocks = restoreBlocks(savedBlocks);
 

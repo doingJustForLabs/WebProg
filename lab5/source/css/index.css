@@ -1,4 +1,4 @@
-/* @import "reset.css"; */
+@import "reset.css";
 
 body {
     font-family: Arial, sans-serif;
@@ -19,6 +19,7 @@ body {
 .button-icon{
     width: 40px;
     /* background-color: #c5bfbf; */
+    /* border: #333; */
 }
 
 .header-block {
@@ -87,6 +88,7 @@ body {
 
 #controls .addTextBlockButton.visible, .editToggle, .saveButton {
     background-color: antiquewhite;
+    border: #333;
 }
 
 .block-actions {
