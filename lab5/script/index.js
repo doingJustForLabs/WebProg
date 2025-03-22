@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         // localStorage.setItem('userName', 'Elfimova_KC-24');
         localStorage.setItem('blocks', JSON.stringify({
-            author: 'Elfimova_KC-24',
+            author: '31_Elfimova_web',
             blocks: blocks.map(block => ({
                 type: block.type,
                 data: {
